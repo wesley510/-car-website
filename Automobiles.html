@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Listings</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4; /* Background color */
+            color: black; /* Text color */
+        }
+
+        header {
+            text-align: center;
+            padding: 1rem 0;
+            background-color: #f77f00;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: auto;
+            background-color: rgba(68, 68, 68, 0.8);
+        }
+
+        nav a {
+            float: left;
+            display: block;
+            color: white;
+            text-align: auto;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            background-color: rgba(85, 85, 85, 0.8);
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .card {
+            background: white; /* Card background */
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 15px;
+            width: 250px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            width: auto;
+            max-height: 150px;
+            max-width: 100%;
+            border-radius: 5px;
+        }
+
+        .price {
+            font-size: 1.5em;
+            color: #2c3e50; /* Price color */
+        }
+
+        .btn {
+            background-color: rgba(247, 127, 0, 0.8); /* Button color */
+            color: black;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn:hover {
+            background-color: rgba(247, 127, 0, 0.8); /* Button hover color */
+        }
+
+        #cart {
+            position: fixed;
+            top: 50px;
+            right: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            display: none;
+            z-index: 10;
+        }
+
+        #cart h3 {
+            margin: 0;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fefefe; /* Modal background color */
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        .close {
+            color: black; /* Close button color */
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        /* Payment Modal Styles */
+        #paymentModal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding-top: 60px;
+        }
+
+        #paymentModal .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .payment-input {
+            margin: 10px 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Car Listings</h1>
+</header>
+
+<nav>
+    <a href="index.html">Home</a>
+    <a href="Automobiles.html">Automobiles</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact Us</a>
+    <a href="blog.html">Blog</a>
+    <a href="services.html">Services</a>
+    <a href="cart.html" id="cart-toggle">Cart(<span id="cart-count">0</span>)</a>
+</nav>
+
+<div id="cart">
+    <h3>Shopping Cart</h3>
+    <ul id="cart-items"></ul>
+    <button onclick="clearCart()">Clear Cart</button>
+    <button onclick="openPaymentModal()">Proceed to Checkout</button>
+</div>
+
+<div class="container">
+    <div class="card" data-name="2019 Ford Fiesta" data-price="200000" data-specs="Make: Ford, Model: Fiesta, Mileage: 45,000 km, Registration Year: 2019, Transmission: Manual, Branch: A, No of Seats: 5, No of Doors: 5, Body Type: Hatchback, Variant: Trend, Colour: Red, Stock Number: F12345, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: No, Fuel Consumption: 5.0 L/100 km, Engine Capacity: 1.0L, Fuel Tank Capacity: 42L, Fuel Type: Petrol, Cylinder Layout: I3, Kilowatts: 123 hp, Drive: FWD, Gears: 6">
+        <img src="https://dhzc82x38ceu.cloudfront.net/Prod/Stock_Item__c/a1pTv0000021bZ7IAI/Image/WhatsApp%20Image%202024-02-06%20at%2011.59.50.jpeg" alt="2019 Ford Fiesta">
+        <h3>2019 Ford Fiesta</h3>
+        <p class="price">R 200,000</p>
+        <button class="btn" onclick="addToCart('2019 Ford Fiesta', 200000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2020 Toyota Corolla" data-price="155000" data-specs="Make: Toyota, Model: Corolla, Mileage: 60,000 km, Registration Year: 2020, Transmission: Automatic, Branch: B, No of Seats: 5, No of Doors: 5, Body Type: Sedan, Variant: XE, Colour: Silver, Stock Number: T23456, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 6.0 L/100 km, Engine Capacity: 1.8L, Fuel Tank Capacity: 50L, Fuel Type: Petrol, Cylinder Layout: I4, Kilowatts: 139 hp, Drive: FWD, Gears: 6">
+        <img src="https://vicimus-glovebox7.s3.us-east-2.amazonaws.com/photos/wbt8G3gqo9q/JTNK4RBE1L3097010/b88dc0b50d0aa1f8894864cd211fcf7e.webp" alt="2020 Toyota Corolla">
+        <h3>2020 Toyota Corolla</h3>
+        <p class="price">R 155,000</p>
+        <button class="btn" onclick="addToCart('2020 Toyota Corolla', 155000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2021 Honda Civic" data-price="300000" data-specs="Make: Honda, Model: Civic, Mileage: 30,000 km, Registration Year: 2021, Transmission: Automatic, Branch: C, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: EX, Colour: Black, Stock Number: H34567, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 6.5 L/100 km, Engine Capacity: 2.0L, Fuel Tank Capacity: 47L, Fuel Type: Petrol, Cylinder Layout: I4, Kilowatts: 158 hp, Drive: FWD, Gears: 10">
+        <img src="https://images.classic.com/vehicles/d08859706cf3c2970205c386c39780f1.jpeg?w=672&h=576" alt="2021 Honda Civic">
+        <h3>2021 Honda Civic</h3>
+        <p class="price">R 300,000</p>
+        <button class="btn" onclick="addToCart('2021 Honda Civic', 300000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="Volkswagen Polo GTI" data-price="350000" data-specs="Make: Volkswagen, Model: Polo GTI, Mileage: 12,000 km, Registration Year: 2021, Transmission: Automatic, Branch: D, No of Seats: 5, No of Doors: 5, Body Type: Hatchback, Variant: GTI, Colour: Blue, Stock Number: V45678, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 6.3 L/100 km, Engine Capacity: 2.0L, Fuel Tank Capacity: 45L, Fuel Type: Petrol, Cylinder Layout: I4, Kilowatts: 200 hp, Drive: FWD, Gears: 7">
+        <img src="https://uploads.vw-mms.de/system/production/images/vwn/036/745/images/a12520194e5093241a5a73238cf7cc511cb90264/DB2021AU00471_web_1600.jpg?1658139610" alt="Volkswagen Polo GTI">
+        <h3>Volkswagen Polo GTI</h3>
+        <p class="price">R 350,000</p>
+        <button class="btn" onclick="addToCart('Volkswagen Polo GTI', 350000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="BMW 3 Series" data-price="500000" data-specs="Make: BMW, Model: 3 Series, Mileage: 40,000 km, Registration Year: 2020, Transmission: Automatic, Branch: E, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: 330i, Colour: White, Stock Number: B56789, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: No, Fuel Consumption: 6.8 L/100 km, Engine Capacity: 2.0L, Fuel Tank Capacity: 60L, Fuel Type: Petrol, Cylinder Layout: I4, Kilowatts: 255 hp, Drive: RWD, Gears: 8">
+        <img src="https://th.bing.com/th/id/R.8b40016a2b9e7216d4606d7dd23b0aa9?rik=VFVJfMD3nFpwlw&pid=ImgRaw&r=0" alt="BMW 3 Series">
+        <h3>BMW 3 Series</h3>
+        <p class="price">R 500,000</p>
+        <button class="btn" onclick="addToCart('BMW 3 Series', 500000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="Mercedes-Benz C-Class" data-price="600000" data-specs="Make: Mercedes-Benz, Model: C-Class, Mileage: 32,000 km, Registration Year: 2021, Transmission: Automatic, Branch: F, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: C300, Colour: Grey, Stock Number: M67890, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 6.4 L/100 km, Engine Capacity: 2.0L, Fuel Tank Capacity: 66L, Fuel Type: Petrol, Cylinder Layout: I4, Kilowatts: 255 hp, Drive: RWD, Gears: 9">
+        <img src="https://th.bing.com/th/id/R.ae79f572fe3f0ea2ad17f7b97005f2a2?rik=a2mZaycAYBo3pA&pid=ImgRaw&r=0" alt="Mercedes-Benz C-Class">
+        <h3>Mercedes-Benz C-Class</h3>
+        <p class="price">R 600,000</p>
+        <button class="btn" onclick="addToCart('Mercedes-Benz C-Class', 600000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="Ford Ranger" data-price="450000" data-specs="Make: Ford, Model: Ranger, Mileage: 50,000 km, Registration Year: 2020, Transmission: Manual, Branch: G, No of Seats: 5, No of Doors: 4, Body Type: Pickup, Variant: XLT, Colour: Black, Stock Number: FR1234, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: No, Fuel Consumption: 8.0 L/100 km, Engine Capacity: 2.2L, Fuel Tank Capacity: 80L, Fuel Type: Diesel, Cylinder Layout: I4, Kilowatts: 160 hp, Drive: RWD, Gears: 6">
+        <img src="https://th.bing.com/th/id/OIP.21PpOgugPZEoG28_AjQ5WwHaE7?rs=1&pid=ImgDetMain" alt="Ford Ranger">
+        <h3>Ford Ranger</h3>
+        <p class="price">R 450,000</p>
+        <button class="btn" onclick="addToCart('Ford Ranger', 450000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2021 Tesla Model 3" data-price="2200000" data-specs="Make: Tesla, Model: Model 3, Mileage: 15,000 km, Registration Year: 2021, Transmission: Single-Speed Transmission, Branch: L, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: Long Range, Colour: White, Stock Number: TM333, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 0 L/100 km, Engine Capacity: Electric, Fuel Tank Capacity: N/A, Fuel Type: Electric, Cylinder Layout: N/A, Kilowatts: 450 hp, Drive: AWD, Gears: 1">
+        <img src="https://www.gtopcars.com/wp-content/uploads/2020/10/2021-Tesla-Model-3-White.jpg" alt="2021 Tesla Model 3">
+        <h3>2021 Tesla Model 3</h3>
+        <p class="price">R 2,200,000</p>
+        <button class="btn" onclick="addToCart('2021 Tesla Model 3', 2200000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2023 Toyota Prius" data-price="700000" data-specs="Make: Toyota, Model: Prius, Mileage: 10,000 km, Registration Year: 2023, Transmission: CVT, Branch: J, No of Seats: 5, No of Doors: 5, Body Type: Hatchback, Variant: Prius Prime, Colour: Green, Stock Number: TP999, Roadworthy Voucher: Yes, Vehicle's Service History: New, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 4.4 L/100 km, Engine Capacity: 1.8L, Fuel Tank Capacity: 43L, Fuel Type: Hybrid, Cylinder Layout: I4, Kilowatts: 220 hp, Drive: FWD, Gears: 1">
+        <img src="https://paultan.org/image/2023/03/2023_BIMS_Toyota_Prius-2-630x420.jpg" alt="2023 Toyota Prius">
+        <h3>2023 Toyota Prius</h3>
+        <p class="price">R 700,000</p>
+        <button class="btn" onclick="addToCart('2023 Toyota Prius', 700000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2025 Honda Accord Hybrid" data-price="850000" data-specs="Make: Honda, Model: Accord, Mileage: 5,000 km, Registration Year: 2025, Transmission: CVT, Branch: K, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: Hybrid, Colour: Blue, Stock Number: AH444, Roadworthy Voucher: Yes, Vehicle's Service History: New, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 5.2 L/100 km, Engine Capacity: 2.0L, Fuel Tank Capacity: 50L, Fuel Type: Hybrid, Cylinder Layout: I4, Kilowatts: 204 hp, Drive: FWD, Gears: 1">
+        <img src="https://hips.hearstapps.com/hmg-prod/images/honda-accord-101-1668710807.jpg?crop=1xw:1xh;center,top&resize=980:*" alt="2025 Honda Accord Hybrid">
+        <h3>2025 Honda Accord Hybrid</h3>
+        <p class="price">R 850,000</p>
+        <button class="btn" onclick="addToCart('2025 Honda Accord Hybrid', 850000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2021 Nissan Leaf" data-price="900000" data-specs="Make: Nissan, Model: Leaf, Mileage: 12,000 km, Registration Year: 2021, Transmission: Single-Speed Transmission, Branch: M, No of Seats: 5, No of Doors: 5, Body Type: Hatchback, Variant: SV, Colour: Silver, Stock Number: NL555, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 0 L/100 km, Engine Capacity: Electric, Fuel Tank Capacity: N/A, Fuel Type: Electric, Cylinder Layout: N/A, Kilowatts: 250 hp, Drive: FWD, Gears: 1">
+        <img src="https://cdn.images.express.co.uk/img/dynamic/24/750x445/1069291.jpg" alt="2021 Nissan Leaf">
+        <h3>2021 Nissan Leaf</h3>
+        <p class="price">R 900,000</p>
+        <button class="btn" onclick="addToCart('2021 Nissan Leaf', 900000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2025 Rolls-Royce Phantom" data-price="12000000" data-specs="Make: Rolls-Royce, Model: Phantom, Mileage: 500 km, Registration Year: 2025, Transmission: Automatic, Branch: N, No of Seats: 5, No of Doors: 4, Body Type: Sedan, Variant: Standard, Colour: Black, Stock Number: RR1111, Roadworthy Voucher: Yes, Vehicle's Service History: New, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 12.0 L/100 km, Engine Capacity: 6.75L, Fuel Tank Capacity: 100L, Fuel Type: Petrol, Cylinder Layout: V12, Kilowatts: 563 hp, Drive: RWD, Gears: 8">
+        <img src="https://i.ytimg.com/vi/MEzX746Mqvc/maxresdefault.jpg" alt="2025 Rolls-Royce Phantom">
+        <h3>2025 Rolls-Royce Phantom</h3>
+        <p class="price">R 12,000,000</p>
+        <button class="btn" onclick="addToCart('2025 Rolls-Royce Phantom', 12000000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2021 Bentley Continental GT" data-price="8050000" data-specs="Make: Bentley, Model: Continental GT, Mileage: 2,000 km, Registration Year: 2021, Transmission: Automatic, Branch: O, No of Seats: 4, No of Doors: 2, Body Type: Coupe, Variant: Speed, Colour: White, Stock Number: BC2222, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: New, Spare Key: Yes, Service Plan: Yes, Fuel Consumption: 10.7 L/100 km, Engine Capacity: 6.0L, Fuel Tank Capacity: 90L, Fuel Type: Petrol, Cylinder Layout: W12, Kilowatts: 650 hp, Drive: AWD, Gears: 8">
+        <img src="https://67cdn.co.uk/137/3/318442/169582477765143b89cd68b_img-94783-large.jpg?width=1024" alt="2021 Bentley Continental GT">
+        <h3>2021 Bentley Continental GT</h3>
+        <p class="price">R 8,050,000</p>
+        <button class="btn" onclick="addToCart('2021 Bentley Continental GT', 8050000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+
+    <div class="card" data-name="2021 Lamborghini Urus" data-price="4900000" data-specs="Make: Lamborghini, Model: Urus, Mileage: 10,000 km, Registration Year: 2021, Transmission: Automatic, Branch: P, No of Seats: 5, No of Doors: 5, Body Type: SUV, Variant: Performante, Colour: Yellow, Stock Number: LU333, Roadworthy Voucher: Yes, Vehicle's Service History: Full, Category: Used, Spare Key: Yes, Service Plan: No, Fuel Consumption: 12.7 L/100 km, Engine Capacity: 4.0L, Fuel Tank Capacity: 85L, Fuel Type: Petrol, Cylinder Layout: V8, Kilowatts: 641 hp, Drive: AWD, Gears: 8">
+        <img src="https://www.hdwallpapers.in/download/black_2021_lamborghini_urus_graphite_capsule_3_4k_5k_hd_cars-3840x2160.jpg" alt="2021 Lamborghini Urus">
+        <h3>2021 Lamborghini Urus</h3>
+        <p class="price">R 4,900,000</p>
+        <button class="btn" onclick="addToCart('2021 Lamborghini Urus', 4900000)">Add to Cart</button>
+        <button class="btn" onclick="showSpecs(this)">View Specs</button>
+    </div>
+</div>
+
+<!-- Modal for displaying specs -->
+<div id="specsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">×</span>
+        <h2 id="modal-title"></h2>
+        <p id="modal-specs"></p>
+    </div>
+</div>
+
+<!-- Payment Modal -->
+<div id="paymentModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closePaymentModal()">×</span>
+        <h2>Payment Information</h2>
+        <form id="paymentForm">
+            <input type="text" class="payment-input" placeholder="Cardholder Name" required>
+            <input type="text" class="payment-input" id="card-number" placeholder="Card Number" required maxlength="16" oninput="this.value = this.value.replace(/[^0-9]/g, '')"> <!-- 16 digit limit -->
+            <input type="text" class="payment-input" placeholder="Expiry Date (MM/YY)" required>
+            <input type="text" class="payment-input" placeholder="CVV" required>
+            <input type="email" class="payment-input" id="email" placeholder="Email Address" required>  <!-- Email input -->
+            <label for="delivery-option">Select Delivery Option:</label>
+            <select id="delivery-option" class="payment-input" required onchange="toggleAddressInput()">
+                <option value="" disabled selected>Select an option</option>
+                <option value="delivery">Delivery</option>
+                <option value="collect">Collect</option>
+            </select>
+            <div id="address-container" style="display: none;">
+                <label for="address">Enter your Address:</label>
+                <input type="text" id="address" class="payment-input" placeholder="Address" />
+            </div>
+            <label for="location-option">Select Location:</label>
+            <select id="location-option" class="payment-input" required>
+                <option value="" disabled selected>Select a location</option>
+                <option value="johannesburg">Johannesburg</option>
+                <option value="nelspruit">Nelspruit</option>
+                <option value="capetown">Cape Town</option>
+            </select>
+            <label for="date-picker">Select Date:</label>
+            <input type="date" id="date-picker" class="payment-input" required min="" />
+
+            <button type="submit" class="btn">Pay Now</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    let cart = [];
+    let lastCarName = '';
+
+    function addToCart(name, price) {
+        lastCarName = name; // Store the last added car name
+        cart.push({ name, price });
+        document.getElementById('cart-count').innerText = cart.length;
+        updateCartDisplay();
+    }
+
+    function updateCartDisplay() {
+        const cartItems = document.getElementById('cart-items');
+        cartItems.innerHTML = ''; // Clear existing items
+        cart.forEach(item => {
+            const li = document.createElement('li');
+            li.innerText = `${item.name} - R${item.price}`;
+            cartItems.appendChild(li);
+        });
+    }
+
+    document.getElementById('cart-toggle').addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent navigating to the cart page
+        const cartElement = document.getElementById('cart');
+        cartElement.style.display = cartElement.style.display === 'block' ? 'none' : 'block';
+    });
+
+    function clearCart() {
+        cart = [];
+        document.getElementById('cart-count').innerText = 0;
+        updateCartDisplay();
+        document.getElementById('cart').style.display = 'none';
+    }
+
+    function openPaymentModal() {
+        if (cart.length === 0) {
+            alert('Your cart is empty. Please add items before proceeding to checkout.');
+            return;
+        }
+        document.getElementById('paymentModal').style.display = 'block';
+    }
+
+    function closePaymentModal() {
+        document.getElementById('paymentModal').style.display = 'none';
+    }
+
+    // Set minimum date to today
+    document.addEventListener("DOMContentLoaded", function() {
+        const datePicker = document.getElementById('date-picker');
+        const today = new Date();
+        const dd = String(today.getDate()).padStart(2, '0');
+        const mm = String(today.getMonth() + 1).padStart(2, '0'); // January is 0!
+        const yyyy = today.getFullYear();
+        datePicker.min = `${yyyy}-${mm}-${dd}`; // Set min date to today
+    });
+
+    // Function to toggle the address input field based on delivery option
+    function toggleAddressInput() {
+        const deliveryOption = document.getElementById('delivery-option').value;
+        const addressContainer = document.getElementById('address-container');
+
+        if (deliveryOption === 'delivery') {
+            addressContainer.style.display = 'block'; // Show address input if delivery is selected
+        } else {
+            addressContainer.style.display = 'none'; // Hide address input if collect is selected
+        }
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+        const deliveryOption = document.getElementById('delivery-option').value;
+        const locationOption = document.getElementById('location-option').value;
+        const selectedDate = document.getElementById('date-picker').value;
+        const address = document.getElementById('address').value;
+        const email = document.getElementById('email').value;
+
+        alert(`Payment successful!\nYou purchased: ${lastCarName}\nDelivery Option: ${deliveryOption}\nLocation: ${locationOption}\nAddress: ${address}\nDate: ${selectedDate}\nA receipt will be emailed to: ${email}`); // Include options in alert
+        closePaymentModal(); // Close the payment modal after submission
+        clearCart(); // Clear the cart after payment
+    });
+
+    function showSpecs(button) {
+        const card = button.parentElement;
+        const name = card.getAttribute('data-name');
+        const specs = card.getAttribute('data-specs');
+
+        document.getElementById('modal-title').innerText = name;
+        document.getElementById('modal-specs').innerText = specs;
+
+        document.getElementById('specsModal').style.display = 'block'; // Show modal
+    }
+
+    function closeModal() {
+        document.getElementById('specsModal').style.display = 'none'; // Hide modal
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('specsModal');
+        if (event.target === modal) {
+            modal.style.display = "none"; // Hide modal on outside click
+        }
+
+        const paymentModal = document.getElementById('paymentModal');
+        if (event.target === paymentModal) {
+            paymentModal.style.display = "none"; // Hide payment modal on outside click
+        }
+    }
+</script>
+
+</body>
+</html>
